@@ -11,7 +11,7 @@ type OrderModalProps = {
 const VARIANTS = ["Hitam", "Biru", "Merah"];
 
 // GANTI dengan nomor WhatsApp penjual (format internasional, tanpa + atau 0 di depan)
-const WHATSAPP_NUMBER = "6281234567890";
+const WHATSAPP_NUMBER = "6281386924636";
 
 const styles: Record<string, CSSProperties> = {
   overlay: {
