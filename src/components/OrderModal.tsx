@@ -163,7 +163,6 @@ export default function OrderModal({
   const [form, setForm] = useState(emptyForm(defaultVariant));
   const [submitted, setSubmitted] = useState(false);
   const [summary, setSummary] = useState<OrderSummary | null>(null);
-  const [waUrl, setWaUrl] = useState("");
 
   // Setiap modal dibuka: kosongkan form & kembali ke tampilan form
   useEffect(() => {
