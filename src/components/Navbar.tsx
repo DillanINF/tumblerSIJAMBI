@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ShoppingCart } from "lucide-react";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -70,7 +71,7 @@ export default function Navbar() {
           href="#pesan"
           className="rounded bg-crimson hover:bg-crimson-light transition-colors px-5 py-2.5 text-sm font-semibold uppercase tracking-wide"
         >
-          Pesan Sekarang
+        <ShoppingCart/>
         </a>
       </nav>
     </header>

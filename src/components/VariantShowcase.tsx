@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import OrderModal from "./OrderModal";
 
 const variants = [
   {
@@ -33,6 +34,7 @@ const variants = [
 
 export default function VariantShowcase() {
   const [active, setActive] = useState(0);
+  const [orderOpen, setOrderOpen] = useState(false);
 
   const current = variants[active];
 
@@ -55,7 +57,7 @@ export default function VariantShowcase() {
   return (
     <section
       id="varian"
-      className="relative overflow-hidden border-y border-rock-line bg-rock-soft/60 py-24 md:py-32"
+      className="relative scroll-mt-20 overflow-hidden border-y border-rock-line bg-rock-soft/60 py-24 md:py-32"
     >
       {/* Background glow */}
       <motion.div
@@ -306,9 +308,10 @@ export default function VariantShowcase() {
 
               {/* BOTTOM CONTROLS */}
               <div className="mt-10">
-                {/* ORDER BUTTON */}
-                <motion.a
-                  href="#pesan"
+                {/* ORDER BUTTON: membuka form pemesanan */}
+                <motion.button
+                  type="button"
+                  onClick={() => setOrderOpen(true)}
                   whileHover={{
                     scale: 1.02,
                   }}
@@ -325,7 +328,7 @@ export default function VariantShowcase() {
                   <span className="text-xl transition-transform duration-300 group-hover:translate-x-1">
                     →
                   </span>
-                </motion.a>
+                </motion.button>
 
                 {/* SWITCH VARIANT */}
                 <div className="mb-5 flex items-center justify-between">
@@ -413,7 +416,14 @@ export default function VariantShowcase() {
           </span>
         </div>
       </div>
+
+      {/* FORM PEMESANAN */}
+      <OrderModal
+        open={orderOpen}
+        onClose={() => setOrderOpen(false)}
+        defaultVariant={current.name}
+        unitPrice={current.price}
+      />
     </section>
   );
 }
-
