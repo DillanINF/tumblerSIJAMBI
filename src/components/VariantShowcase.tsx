@@ -258,7 +258,7 @@ export default function VariantShowcase() {
                   }}
                   className="mt-8"
                 >
-                  <p className="mb-1 text-xs uppercase tracking-[0.25em] text-ash">
+                  <p id="varian-tumbler" className="mb-1 text-xs uppercase tracking-[0.25em] text-ash">
                     Harga
                   </p>
 
@@ -371,35 +371,86 @@ export default function VariantShowcase() {
                 </div>
 
                 {/* VARIANT BUTTONS */}
-                <div className="grid grid-cols-3 gap-2">
-                  {variants.map((variant, index) => (
-                    <button
-                      type="button"
-                      key={variant.name}
-                      onClick={() => setActive(index)}
-                      className={`relative rounded-lg border px-3 py-4 text-left transition ${
-                        active === index
-                          ? "border-white/30 bg-white/[0.08]"
-                          : "border-rock-line hover:bg-white/[0.04]"
-                      }`}
-                    >
-                      <span
-                        className="mb-2 block h-2 w-2 rounded-full"
-                        style={{
-                          backgroundColor: variant.accent,
-                        }}
-                      />
+              <div className="flex items-center gap-3">
+  {variants.map((variant, index) => {
+    const isActive = active === index;
 
-                      <span className="block text-xs font-semibold uppercase tracking-wider">
-                        {variant.name}
-                      </span>
+    return (
+      <motion.button
+        type="button"
+        key={variant.name}
+        onClick={() => setActive(index)}
+        whileHover={{ scale: 1.15 }}
+        whileTap={{ scale: 0.9 }}
+        animate={{
+          scale: isActive ? 1.1 : 1,
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 400,
+          damping: 18,
+        }}
+        className="relative flex h-10 w-10 items-center justify-center"
+        aria-label={`Pilih ${variant.name}`}
+      >
+        {/* Glow saat aktif */}
+        {isActive && (
+          <motion.span
+            layoutId="activeGlow"
+            className="absolute inset-0 rounded-full"
+            style={{
+              backgroundColor: variant.accent,
+              filter: "blur(10px)",
+              opacity: 0.45,
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 400,
+              damping: 25,
+            }}
+          />
+        )}
 
-                      <span className="mt-1 block text-[10px] uppercase tracking-wider text-ash">
-                        {variant.tag}
-                      </span>
-                    </button>
-                  ))}
-                </div>
+        {/* Lingkaran luar */}
+        <motion.span
+          animate={{
+            borderColor: isActive
+              ? variant.accent
+              : "rgba(255,255,255,0.2)",
+          }}
+          transition={{ duration: 0.25 }}
+          className="relative flex h-9 w-9 items-center justify-center rounded-full border-2"
+        >
+          {/* Warna produk */}
+          <motion.span
+            animate={{
+              scale: isActive ? 1 : 0.8,
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 400,
+              damping: 20,
+            }}
+            className="block h-6 w-6 rounded-full"
+            style={{
+              backgroundColor: variant.accent,
+            }}
+          />
+
+          {/* Titik tengah saat aktif */}
+          {isActive && (
+            <motion.span
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              className="absolute h-2 w-2 rounded-full bg-white"
+            />
+          )}
+        </motion.span>
+      </motion.button>
+    );
+  })}
+</div>
               </div>
             </div>
           </div>

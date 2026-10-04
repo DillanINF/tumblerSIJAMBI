@@ -8,10 +8,24 @@ type OrderModalProps = {
   unitPrice?: number;
 };
 
+type OrderSummary = {
+  nama: string;
+  varian: string;
+  jumlah: number;
+  total: string;
+};
+
 const VARIANTS = ["Hitam", "Biru", "Merah"];
 
-// GANTI dengan nomor WhatsApp penjual (format internasional, tanpa + atau 0 di depan)
-const WHATSAPP_NUMBER = "6281386924636";
+
+const emptyForm = (varian: string) => ({
+  nama: "",
+  telepon: "",
+  alamat: "",
+  varian,
+  jumlah: 1,
+  catatan: "",
+});
 
 const styles: Record<string, CSSProperties> = {
   overlay: {
@@ -103,6 +117,41 @@ const styles: Record<string, CSSProperties> = {
     borderRadius: 4,
     cursor: "pointer",
   },
+  successWrap: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    textAlign: "center",
+    padding: "12px 0 4px",
+  },
+  checkCircle: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 72,
+    height: 72,
+    marginBottom: 20,
+    borderRadius: 999,
+    background: "rgba(34,197,94,0.15)",
+    border: "2px solid #22C55E",
+    color: "#22C55E",
+  },
+  summaryBox: {
+    width: "100%",
+    marginTop: 24,
+    padding: 16,
+    textAlign: "left",
+    background: "#17171A",
+    border: "1px solid rgba(237,237,237,0.15)",
+    borderRadius: 8,
+  },
+  summaryRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: 16,
+    padding: "6px 0",
+    fontSize: 14,
+  },
 };
 
 export default function OrderModal({
@@ -111,19 +160,19 @@ export default function OrderModal({
   defaultVariant = "Merah",
   unitPrice = 45000,
 }: OrderModalProps) {
-  const [form, setForm] = useState({
-    nama: "",
-    telepon: "",
-    alamat: "",
-    varian: defaultVariant,
-    jumlah: 1,
-    catatan: "",
-  });
+  const [form, setForm] = useState(emptyForm(defaultVariant));
+  const [submitted, setSubmitted] = useState(false);
+  const [summary, setSummary] = useState<OrderSummary | null>(null);
+  const [waUrl, setWaUrl] = useState("");
 
-  // Sinkronkan varian setiap modal dibuka / varian di showcase berubah
+  // Setiap modal dibuka: kosongkan form & kembali ke tampilan form
   useEffect(() => {
-    setForm((f) => ({ ...f, varian: defaultVariant }));
-  }, [defaultVariant, open]);
+    if (open) {
+      setSubmitted(false);
+      setSummary(null);
+      setForm(emptyForm(defaultVariant));
+    }
+  }, [open, defaultVariant]);
 
   // Tutup dengan Escape + kunci scroll body saat modal terbuka
   useEffect(() => {
@@ -165,16 +214,24 @@ export default function OrderModal({
       .filter(Boolean)
       .join("\n");
 
-    window.open(
-      `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`,
-      "_blank",
-      "noopener,noreferrer"
-    );
-    onClose();
+
+
+    setSummary({
+      nama: form.nama,
+      varian: form.varian,
+      jumlah: form.jumlah,
+      total,
+    });
+    setSubmitted(true);
+
   };
 
-  // createPortal: modal dirender langsung di <body>, jadi selalu di atas
-  // semua elemen lain (termasuk gambar tumbler dan navbar).
+  const fieldLabel = (id: string, text: string) => (
+    <label htmlFor={id} className="font-display" style={styles.label}>
+      {text}
+    </label>
+  );
+
   return createPortal(
     <div style={styles.overlay} onClick={onClose} role="presentation">
       <div
@@ -193,138 +250,212 @@ export default function OrderModal({
           ✕
         </button>
 
-        <h2
-          id="order-title"
-          className="font-display"
-          style={{
-            margin: 0,
-            fontSize: 26,
-            fontWeight: 600,
-            textTransform: "uppercase",
-          }}
-        >
-          Form Pemesanan
-        </h2>
-        <p style={{ margin: "4px 0 24px", fontSize: 14, color: "#8B8B8F" }}>
-          Isi data di bawah, pesananmu akan dikirim lewat WhatsApp.
-        </p>
-
-        <form onSubmit={handleSubmit} style={styles.form}>
-          <div>
-            <label htmlFor="nama" className="font-display" style={styles.label}>
-              Nama lengkap
-            </label>
-            <input
-              id="nama"
-              required
-              value={form.nama}
-              onChange={(e) => update("nama", e.target.value)}
-              style={styles.input}
-              placeholder="Nama penerima"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="telepon" className="font-display" style={styles.label}>
-              No. WhatsApp
-            </label>
-            <input
-              id="telepon"
-              type="tel"
-              required
-              inputMode="tel"
-              value={form.telepon}
-              onChange={(e) => update("telepon", e.target.value)}
-              style={styles.input}
-              placeholder="08xxxxxxxxxx"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="alamat" className="font-display" style={styles.label}>
-              Alamat pengiriman
-            </label>
-            <textarea
-              id="alamat"
-              required
-              rows={3}
-              value={form.alamat}
-              onChange={(e) => update("alamat", e.target.value)}
-              style={{ ...styles.input, resize: "vertical" }}
-              placeholder="Jalan, kelurahan, kecamatan, kota, kode pos"
-            />
-          </div>
-
-          <div style={styles.row}>
-            <div>
-              <label htmlFor="varian" className="font-display" style={styles.label}>
-                Varian
-              </label>
-              <select
-                id="varian"
-                value={form.varian}
-                onChange={(e) => update("varian", e.target.value)}
-                style={styles.input}
+        {submitted && summary ? (
+          /* ===== TAMPILAN SETELAH MEMESAN ===== */
+          <div style={styles.successWrap} role="status" aria-live="polite">
+            <div style={styles.checkCircle}>
+              <svg
+                width="36"
+                height="36"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
               >
-                {VARIANTS.map((v) => (
-                  <option key={v} value={v}>
-                    {v}
-                  </option>
-                ))}
-              </select>
+                <path d="M5 13l4 4L19 7" />
+              </svg>
             </div>
 
-            <div>
-              <label htmlFor="jumlah" className="font-display" style={styles.label}>
-                Jumlah
-              </label>
-              <input
-                id="jumlah"
-                type="number"
-                min={1}
-                max={99}
-                required
-                value={form.jumlah}
-                onChange={(e) =>
-                  update("jumlah", Math.max(1, Number(e.target.value) || 1))
-                }
-                style={styles.input}
-              />
+            <h2
+              id="order-title"
+              className="font-display"
+              style={{
+                margin: 0,
+                fontSize: 28,
+                fontWeight: 600,
+                textTransform: "uppercase",
+              }}
+            >
+              Pesanan Berhasil!
+            </h2>
+
+            <p style={{ margin: "10px 0 0", fontSize: 14, color: "#8B8B8F" }}>
+              Terima kasih, {summary.nama}. Pesananmu Berhasil Terkirim.
+            </p>
+
+            <div style={styles.summaryBox}>
+              <div style={styles.summaryRow}>
+                <span style={{ color: "#8B8B8F" }}>Varian</span>
+                <span>{summary.varian}</span>
+              </div>
+              <div style={styles.summaryRow}>
+                <span style={{ color: "#8B8B8F" }}>Jumlah</span>
+                <span>{summary.jumlah}</span>
+              </div>
+              <div
+                style={{
+                  ...styles.summaryRow,
+                  marginTop: 6,
+                  paddingTop: 12,
+                  borderTop: "1px solid rgba(237,237,237,0.15)",
+                  fontWeight: 600,
+                }}
+              >
+                <span>Total</span>
+                <span>{summary.total}</span>
+              </div>
             </div>
-          </div>
 
-          <div>
-            <label htmlFor="catatan" className="font-display" style={styles.label}>
-              Catatan (opsional)
-            </label>
-            <input
-              id="catatan"
-              value={form.catatan}
-              onChange={(e) => update("catatan", e.target.value)}
-              style={styles.input}
-              placeholder="Misal: kirim sebelum hari Jumat"
-            />
-          </div>
-
-          <div style={styles.totalRow}>
-            <span
+            <button
+              type="button"
+              onClick={onClose}
               className="font-display"
-              style={{ ...styles.label, marginBottom: 0 }}
+              style={{ ...styles.submit, marginTop: 24 }}
             >
-              Total
-            </span>
-            <span
-              className="font-display"
-              style={{ fontSize: 22, fontWeight: 600 }}
-            >
-              {total}
-            </span>
-          </div>
+              Tutup
+            </button>
 
-          <button type="submit" className="font-display" style={styles.submit}>
-            Kirim Pesanan
-          </button>
-        </form>
+            <a
+              href={waUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                marginTop: 14,
+                fontSize: 13,
+                color: "#8B8B8F",
+                textDecoration: "underline",
+              }}
+            >
+            </a>
+          </div>
+        ) : (
+          /* ===== TAMPILAN FORM ===== */
+          <>
+            <h2
+              id="order-title"
+              className="font-display"
+              style={{
+                margin: 0,
+                fontSize: 26,
+                fontWeight: 600,
+                textTransform: "uppercase",
+              }}
+            >
+              Form Pemesanan
+            </h2>
+            <p style={{ margin: "4px 0 24px", fontSize: 14, color: "#8B8B8F" }}>
+              Isi data di bawah.
+            </p>
+
+            <form onSubmit={handleSubmit} style={styles.form}>
+              <div>
+                {fieldLabel("nama", "Nama lengkap")}
+                <input
+                  id="nama"
+                  required
+                  value={form.nama}
+                  onChange={(e) => update("nama", e.target.value)}
+                  style={styles.input}
+                  placeholder="Nama penerima"
+                />
+              </div>
+
+              <div>
+                {fieldLabel("telepon", "No. WhatsApp")}
+                <input
+                  id="telepon"
+                  type="tel"
+                  required
+                  inputMode="tel"
+                  value={form.telepon}
+                  onChange={(e) => update("telepon", e.target.value)}
+                  style={styles.input}
+                  placeholder="08xxxxxxxxxx"
+                />
+              </div>
+
+              <div>
+                {fieldLabel("alamat", "Alamat pengiriman")}
+                <textarea
+                  id="alamat"
+                  required
+                  rows={3}
+                  value={form.alamat}
+                  onChange={(e) => update("alamat", e.target.value)}
+                  style={{ ...styles.input, resize: "vertical" }}
+                  placeholder="Jalan, kelurahan, kecamatan, kota, kode pos"
+                />
+              </div>
+
+              <div style={styles.row}>
+                <div>
+                  {fieldLabel("varian", "Varian")}
+                  <select
+                    id="varian"
+                    value={form.varian}
+                    onChange={(e) => update("varian", e.target.value)}
+                    style={styles.input}
+                  >
+                    {VARIANTS.map((v) => (
+                      <option key={v} value={v}>
+                        {v}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  {fieldLabel("jumlah", "Jumlah")}
+                  <input
+                    id="jumlah"
+                    type="number"
+                    min={1}
+                    max={99}
+                    required
+                    value={form.jumlah}
+                    onChange={(e) =>
+                      update("jumlah", Math.max(1, Number(e.target.value) || 1))
+                    }
+                    style={styles.input}
+                  />
+                </div>
+              </div>
+
+              <div>
+                {fieldLabel("catatan", "Catatan (opsional)")}
+                <input
+                  id="catatan"
+                  value={form.catatan}
+                  onChange={(e) => update("catatan", e.target.value)}
+                  style={styles.input}
+                  placeholder="Misal: kirim sebelum hari Jumat"
+                />
+              </div>
+
+              <div style={styles.totalRow}>
+                <span
+                  className="font-display"
+                  style={{ ...styles.label, marginBottom: 0 }}
+                >
+                  Total
+                </span>
+                <span
+                  className="font-display"
+                  style={{ fontSize: 22, fontWeight: 600 }}
+                >
+                  {total}
+                </span>
+              </div>
+
+              <button type="submit" className="font-display" style={styles.submit}>
+                Kirim Pesanan
+              </button>
+            </form>
+          </>
+        )}
       </div>
     </div>,
     document.body

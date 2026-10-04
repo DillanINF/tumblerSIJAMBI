@@ -68,7 +68,7 @@ export default function Navbar() {
 
         {/* ORDER BUTTON */}
         <a
-          href="#pesan"
+          href="#varian-tumbler"
           className="rounded bg-crimson hover:bg-crimson-light transition-colors px-5 py-2.5 text-sm font-semibold uppercase tracking-wide"
         >
         <ShoppingCart/>

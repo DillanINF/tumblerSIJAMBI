@@ -17,7 +17,7 @@ export default function CTASection() {
           Stronger · Trusted · Always With You
         </h2>
         <p className="text-ash mt-4">
-          Tinggalkan email, kami kabari begitu stok varian pilihanmu tersedia.
+          Tinggalkan email, Jika ingin berlangganan dengan SIJAMBI.
         </p>
 
         {sent ? (
