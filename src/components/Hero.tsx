@@ -11,119 +11,37 @@ export default function Hero() {
     offset: ["start start", "end end"],
   });
 
-  const mountainBackY = useTransform(
-    scrollYProgress,
-    [0, 1],
-    ["0%", "26%"]
-  );
+  const mountainBackY = useTransform(scrollYProgress, [0, 1], ["0%", "26%"]);
+  const mountainFrontY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
 
-  const mountainFrontY = useTransform(
-    scrollYProgress,
-    [0, 1],
-    ["0%", "50%"]
-  );
-
-  const textOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.22],
-    [1, 0]
-  );
-
-  const textY = useTransform(
-    scrollYProgress,
-    [0, 0.22],
-    ["0%", "-30%"]
-  );
+  const textOpacity = useTransform(scrollYProgress, [0, 0.22], [1, 0]);
+  const textY = useTransform(scrollYProgress, [0, 0.22], ["0%", "-30%"]);
 
   // Black tumbler
-  const blackX = useTransform(
-    scrollYProgress,
-    [0, 1],
-    ["0vw", "-65vw"]
-  );
-
-  const blackRotate = useTransform(
-    scrollYProgress,
-    [0, 1],
-    [-6, -110]
-  );
-
-  const blackScale = useTransform(
-    scrollYProgress,
-    [0, 0.6, 1],
-    [1, 1.05, 0.55]
-  );
-
-  const blackOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.7, 1],
-    [1, 1, 0]
-  );
+  const blackX = useTransform(scrollYProgress, [0, 1], ["0vw", "-65vw"]);
+  const blackRotate = useTransform(scrollYProgress, [0, 1], [-6, -110]);
+  const blackScale = useTransform(scrollYProgress, [0, 0.6, 1], [1, 1.05, 0.55]);
+  const blackOpacity = useTransform(scrollYProgress, [0, 0.7, 1], [1, 1, 0]);
 
   // Blue tumbler
-  const blueX = useTransform(
-    scrollYProgress,
-    [0, 1],
-    ["0vw", "65vw"]
-  );
-
-  const blueRotate = useTransform(
-    scrollYProgress,
-    [0, 1],
-    [6, 110]
-  );
-
-  const blueScale = useTransform(
-    scrollYProgress,
-    [0, 0.6, 1],
-    [1, 1.05, 0.55]
-  );
-
-  const blueOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.7, 1],
-    [1, 1, 0]
-  );
+  const blueX = useTransform(scrollYProgress, [0, 1], ["0vw", "65vw"]);
+  const blueRotate = useTransform(scrollYProgress, [0, 1], [6, 110]);
+  const blueScale = useTransform(scrollYProgress, [0, 0.6, 1], [1, 1.05, 0.55]);
+  const blueOpacity = useTransform(scrollYProgress, [0, 0.7, 1], [1, 1, 0]);
 
   // Red tumbler
-  const redY = useTransform(
-    scrollYProgress,
-    [0, 1],
-    ["0%", "-140%"]
-  );
-
-  const redRotate = useTransform(
-    scrollYProgress,
-    [0, 1],
-    [-3, 22]
-  );
-
-  const redScale = useTransform(
-    scrollYProgress,
-    [0, 0.5, 1],
-    [1, 1.35, 1.7]
-  );
-
-  const redOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.6, 1],
-    [1, 1, 0]
-  );
+  const redY = useTransform(scrollYProgress, [0, 1], ["0%", "-140%"]);
+  const redRotate = useTransform(scrollYProgress, [0, 1], [-3, 22]);
+  const redScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.35, 1.7]);
+  const redOpacity = useTransform(scrollYProgress, [0, 0.6, 1], [1, 1, 0]);
 
   // Vignette
-  const vignette = useTransform(
-    scrollYProgress,
-    [0.75, 1],
-    [0, 1]
-  );
+  const vignette = useTransform(scrollYProgress, [0.75, 1], [0, 1]);
 
   return (
-    <section
-      ref={sectionRef}
-      id="top"
-      className="relative h-[240vh]"
-    >
-      <div className="sticky top-0 h-[100svh] overflow-hidden flex items-center">
+    <section ref={sectionRef} id="top" className="relative h-[240vh]">
+      {/* FIX: pt-20 pb-6 on mobile so content clears the navbar */}
+      <div className="sticky top-0 h-[100svh] overflow-hidden flex items-center pt-20 pb-6 md:pt-0 md:pb-0">
         {/* Background */}
         <div className="absolute inset-0 bg-gradient-to-b from-rock-deep via-rock to-rock-soft" />
 
@@ -158,7 +76,8 @@ export default function Hero() {
         </motion.svg>
 
         {/* Main content */}
-        <div className="relative max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-8 items-center w-full">
+        {/* FIX: gap-4 on mobile */}
+        <div className="relative max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-4 md:gap-8 items-center w-full">
           {/* Text */}
           <motion.div
             style={{
@@ -167,31 +86,31 @@ export default function Hero() {
             }}
             className="order-2 md:order-1 text-center md:text-left"
           >
-            <p className="text-crimson font-display font-semibold tracking-[0.25em] text-sm uppercase mb-4 animate-rise">
+            <p className="text-crimson font-display font-semibold tracking-[0.25em] text-xs sm:text-sm uppercase mb-3 sm:mb-4 animate-rise">
               More Than Just A Tumbler
             </p>
 
-            <h1 className="font-display font-semibold uppercase text-4xl sm:text-5xl leading-[1.05] tracking-tight animate-rise [animation-delay:120ms]">
+            <h1 className="font-display font-semibold uppercase text-3xl sm:text-5xl leading-[1.05] tracking-tight animate-rise [animation-delay:120ms]">
               Tetap Segar di Setiap Langkah
             </h1>
 
-            <p className="mt-5 text-ash max-w-md leading-relaxed mx-auto md:mx-0 animate-rise [animation-delay:220ms]">
+            <p className="mt-3 sm:mt-5 text-sm sm:text-base text-ash max-w-md leading-relaxed mx-auto md:mx-0 animate-rise [animation-delay:220ms]">
               Aluminium premium, tahan suhu panas &amp; dingin, dan siap
               diajak ke mana pun aktivitasmu berlanjut.
             </p>
 
             {/* Buttons */}
-            <div className="mt-8 flex flex-wrap justify-center md:justify-start gap-4 animate-rise [animation-delay:320ms]">
+            <div className="mt-5 sm:mt-8 flex flex-wrap justify-center md:justify-start gap-3 sm:gap-4 animate-rise [animation-delay:320ms]">
               <a
                 href="#pesan"
-                className="rounded bg-crimson hover:bg-crimson-light transition-colors px-7 py-3 font-display font-semibold uppercase tracking-wide text-sm"
+                className="rounded bg-crimson hover:bg-crimson-light transition-colors px-6 sm:px-7 py-2.5 sm:py-3 font-display font-semibold uppercase tracking-wide text-sm"
               >
                 Pesan Sekarang
               </a>
 
               <a
                 href="#varian"
-                className="rounded border border-silver/30 hover:border-silver transition-colors px-7 py-3 font-display font-semibold uppercase tracking-wide text-sm"
+                className="rounded border border-silver/30 hover:border-silver transition-colors px-6 sm:px-7 py-2.5 sm:py-3 font-display font-semibold uppercase tracking-wide text-sm"
               >
                 Lihat Varian
               </a>
@@ -199,7 +118,8 @@ export default function Hero() {
           </motion.div>
 
           {/* Products */}
-          <div className="order-1 md:order-2 relative h-[360px] sm:h-[440px] flex items-center justify-center">
+          {/* FIX: shorter on mobile (260px) */}
+          <div className="order-1 md:order-2 relative h-[260px] sm:h-[360px] md:h-[440px] flex items-center justify-center">
             {/* Black tumbler */}
             <motion.div
               style={{
@@ -259,10 +179,10 @@ export default function Hero() {
           className="pointer-events-none absolute inset-0 bg-rock"
         />
 
-        {/* Scroll indicator */}
+        {/* Scroll indicator: hidden on mobile so it doesn't overlap the buttons */}
         <motion.div
           style={{ opacity: textOpacity }}
-          className="absolute bottom-6 inset-x-0 flex justify-center"
+          className="absolute bottom-6 inset-x-0 hidden md:flex justify-center"
         >
           <span className="h-9 w-5 rounded-full border border-silver/30 flex items-start justify-center p-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-silver/70 animate-pulseGlow" />

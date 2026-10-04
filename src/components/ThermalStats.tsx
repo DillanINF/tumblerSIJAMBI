@@ -66,7 +66,7 @@ export default function ThermalStats() {
             label="Dingin bertahan"
             value="24 jam"
             detail="Es tetap padat lebih dari sehari penuh pada suhu ruang."
-            percent={92}
+            percent={100}
             color="#4C7CD1"
             delay={0}
           />
@@ -74,7 +74,7 @@ export default function ThermalStats() {
             label="Panas bertahan"
             value="12 jam"
             detail="Minuman panas tetap hangat dari pagi sampai malam."
-            percent={68}
+            percent={50}
             color="#D21F2E"
             delay={0.2}
           />

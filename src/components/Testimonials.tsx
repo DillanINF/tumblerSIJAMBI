@@ -3,18 +3,18 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const quotes = [
   {
-    text: "Naik motor 2 jam ke kantor, kopinya masih panas waktu sampai. Nggak nyangka.",
-    name: "Dinda R.",
-    role: "Pengguna sehari-hari",
+    text: "Tumbler aku sering pecah dan sering dihajar mamahku, Lalu aku beralih ke produk SIJAMBI dan kualitasnya bertahan lama dan kuat.",
+    name: "Wowok.",
+    role: "Pelajar",
   },
   {
-    text: "Ku pakai buat hiking, es batu masih utuh setelah semalaman di tas.",
-    name: "Farhan A.",
-    role: "Pendaki",
+    text: "Suhu kopi gueh bertahan lama dari pagi sampe sore coy.",
+    name: "Jokowi.",
+    role: "Pekerja kantoran",
   },
   {
-    text: "Seginya nggak bocor sama sekali walau sering kebawa jungkir di tas kerja.",
-    name: "Nadya S.",
+    text: "Botolnya mantap bangat cuyy, gueh pekerja lapangan dan es di dalam tumblernya bertahan lama cok.",
+    name: "Azam Kumis",
     role: "Pekerja lapangan",
   },
 ];
