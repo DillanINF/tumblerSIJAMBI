@@ -17,7 +17,6 @@ type OrderSummary = {
 
 const VARIANTS = ["Hitam", "Biru", "Merah"];
 
-
 const emptyForm = (varian: string) => ({
   nama: "",
   telepon: "",
@@ -176,10 +175,16 @@ export default function OrderModal({
   // Tutup dengan Escape + kunci scroll body saat modal terbuka
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+
     document.addEventListener("keydown", onKey);
+
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prevOverflow;
@@ -199,21 +204,6 @@ export default function OrderModal({
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const text = [
-      "Halo, saya ingin memesan Tumbler SiJambi.",
-      "",
-      `Nama: ${form.nama}`,
-      `No. HP: ${form.telepon}`,
-      `Alamat: ${form.alamat}`,
-      `Varian: ${form.varian}`,
-      `Jumlah: ${form.jumlah}`,
-      `Total: ${total}`,
-      form.catatan ? `Catatan: ${form.catatan}` : "",
-    ]
-      .filter(Boolean)
-      .join("\n");
-
-
 
     setSummary({
       nama: form.nama,
@@ -221,8 +211,8 @@ export default function OrderModal({
       jumlah: form.jumlah,
       total,
     });
-    setSubmitted(true);
 
+    setSubmitted(true);
   };
 
   const fieldLabel = (id: string, text: string) => (
@@ -281,7 +271,13 @@ export default function OrderModal({
               Pesanan Berhasil!
             </h2>
 
-            <p style={{ margin: "10px 0 0", fontSize: 14, color: "#8B8B8F" }}>
+            <p
+              style={{
+                margin: "10px 0 0",
+                fontSize: 14,
+                color: "#8B8B8F",
+              }}
+            >
               Terima kasih, {summary.nama}. Pesananmu Berhasil Terkirim.
             </p>
 
@@ -290,10 +286,12 @@ export default function OrderModal({
                 <span style={{ color: "#8B8B8F" }}>Varian</span>
                 <span>{summary.varian}</span>
               </div>
+
               <div style={styles.summaryRow}>
                 <span style={{ color: "#8B8B8F" }}>Jumlah</span>
                 <span>{summary.jumlah}</span>
               </div>
+
               <div
                 style={{
                   ...styles.summaryRow,
@@ -316,19 +314,6 @@ export default function OrderModal({
             >
               Tutup
             </button>
-
-            <a
-              href={waUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                marginTop: 14,
-                fontSize: 13,
-                color: "#8B8B8F",
-                textDecoration: "underline",
-              }}
-            >
-            </a>
           </div>
         ) : (
           /* ===== TAMPILAN FORM ===== */
@@ -345,7 +330,14 @@ export default function OrderModal({
             >
               Form Pemesanan
             </h2>
-            <p style={{ margin: "4px 0 24px", fontSize: 14, color: "#8B8B8F" }}>
+
+            <p
+              style={{
+                margin: "4px 0 24px",
+                fontSize: 14,
+                color: "#8B8B8F",
+              }}
+            >
               Isi data di bawah.
             </p>
 
@@ -416,7 +408,10 @@ export default function OrderModal({
                     required
                     value={form.jumlah}
                     onChange={(e) =>
-                      update("jumlah", Math.max(1, Number(e.target.value) || 1))
+                      update(
+                        "jumlah",
+                        Math.max(1, Number(e.target.value) || 1),
+                      )
                     }
                     style={styles.input}
                   />
@@ -441,6 +436,7 @@ export default function OrderModal({
                 >
                   Total
                 </span>
+
                 <span
                   className="font-display"
                   style={{ fontSize: 22, fontWeight: 600 }}
@@ -449,7 +445,11 @@ export default function OrderModal({
                 </span>
               </div>
 
-              <button type="submit" className="font-display" style={styles.submit}>
+              <button
+                type="submit"
+                className="font-display"
+                style={styles.submit}
+              >
                 Kirim Pesanan
               </button>
             </form>
@@ -457,6 +457,6 @@ export default function OrderModal({
         )}
       </div>
     </div>,
-    document.body
+    document.body,
   );
 }
